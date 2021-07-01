@@ -271,7 +271,7 @@ let gameTimer;
 function startGameTimer() {
   clearInterval(gameTimer);
   const timeNode = document.getElementById('time');
-  timeNode.innerText = '180秒 / 180秒';
+  timeNode.innerText = '60秒 / 60秒';
   gameTimer = setInterval(function() {
     const arr = timeNode.innerText.split('秒 /');
     const t = parseInt(arr[0]);
