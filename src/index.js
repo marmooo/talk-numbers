@@ -118,22 +118,15 @@ function speak(text) {
   const msg = new SpeechSynthesisUtterance(text);
   const lang = document.getElementById('langRadio').lang.value;
   const voices = allVoices.filter(voice => voice.lang == lang);
+  msg.onend = () => { voiceInput.start() };
   msg.voice = voices[Math.floor(Math.random() * voices.length)];
   msg.lang = document.getElementById('langRadio').lang.value;
+  voiceInput.stop();
   speechSynthesis.speak(msg);
-  return msg;
 }
 
 function respeak() {
-  voiceInput.stop();
-  const msg = speak(answer);
-  msg.onend = function() {
-    voiceInput.start();
-  }
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  speak(answer);
 }
 
 function addLangRadioBox() {
@@ -170,18 +163,6 @@ function hideAnswer() {
   document.getElementById('reply').textContent = '';
 }
 
-function showAnswer() {
-  voiceInput.stop();
-  const msg = speak(answer);
-  msg.onend = async function() {
-    if (!firstRun) {
-      await sleep(1000);
-      nextProblem();
-    }
-  }
-  document.getElementById('reply').textContent = answer;
-}
-
 function nextProblem() {
   hideAnswer();
   const grade = document.getElementById('grade').selectedIndex + 1;
@@ -189,11 +170,7 @@ function nextProblem() {
   answer = getRandomInt(0, max).toString();
   document.getElementById('answer').textContent = answer;
   if (localStorage.getItem('voice') != 0) {
-    voiceInput.stop();
-    const msg = speak(answer);
-    msg.onend = function() {
-      voiceInput.start();
-    }
+    speak(answer);
   }
   if (firstRun) {
     firstRun = false;
@@ -327,8 +304,9 @@ function setVoiceInput() {
       stopButton.classList.remove('d-none');
     };
     voiceInput.onend = (event) => {
-      voiceInput.stop();
-      voiceInput.start();
+      if (!speechSynthesis.speaking) {
+        voiceInput.start();
+      }
     };
     voiceInput.onresult = (event) => {
       const reply = event.results[0][0].transcript;
@@ -337,6 +315,7 @@ function setVoiceInput() {
         playAudio(correctAudio);
         nextProblem();
       }
+      voiceInput.stop();
     };
     return voiceInput;
   }
