@@ -185,7 +185,7 @@ function showAnswer() {
 function nextProblem() {
   hideAnswer();
   const grade = document.getElementById('grade').selectedIndex + 1;
-  const max = Math.pow(10, grade) - 1;
+  const max = Math.pow(10, grade);
   answer = getRandomInt(0, max).toString();
   document.getElementById('answer').textContent = answer;
   if (localStorage.getItem('voice') != 0) {

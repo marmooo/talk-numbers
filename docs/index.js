@@ -15,7 +15,7 @@ function getRandomInt(min,max){min=Math.ceil(min);max=Math.floor(max);return Mat
 function hideAnswer(){document.getElementById('reply').textContent='';}
 function showAnswer(){voiceInput.stop();const msg=speak(answer);msg.onend=async function(){if(!firstRun){await sleep(1000);nextProblem();}}
 document.getElementById('reply').textContent=answer;}
-function nextProblem(){hideAnswer();const grade=document.getElementById('grade').selectedIndex+1;const max=Math.pow(10,grade)-1;answer=getRandomInt(0,max).toString();document.getElementById('answer').textContent=answer;if(localStorage.getItem('voice')!=0){voiceInput.stop();const msg=speak(answer);msg.onend=function(){voiceInput.start();}}
+function nextProblem(){hideAnswer();const grade=document.getElementById('grade').selectedIndex+1;const max=Math.pow(10,grade);answer=getRandomInt(0,max).toString();document.getElementById('answer').textContent=answer;if(localStorage.getItem('voice')!=0){voiceInput.stop();const msg=speak(answer);msg.onend=function(){voiceInput.start();}}
 if(firstRun){firstRun=false;}}
 function catNyan(){playAudio(errorAudio);}
 function loadImage(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=(e)=>reject(e);img.src=src;});}
