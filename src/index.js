@@ -330,10 +330,13 @@ function stopVoiceInput() {
   const stopButton = document.getElementById('stop-voice-input');
   startButton.classList.remove('d-none');
   stopButton.classList.add('d-none');
-  document.getElementById('reply').textContent = '英語で答えてください';
+  document.getElementById('reply').textContent = '答えてください';
   voiceInput.stop();
 }
 
 
+document.getElementById('langRadio').onchange = () => {
+  voiceInput = setVoiceInput();
+}
 document.addEventListener('click', unlockAudio, { once:true, useCapture:true });
 
