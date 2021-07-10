@@ -288,6 +288,10 @@ function countdown() {
   }, 1000);
 }
 
+function formatReply(reply) {
+  return reply.toLowerCase().split(' ').slice(0, -1).join(' ');
+}
+
 function setVoiceInput() {
   if (!('webkitSpeechRecognition' in window)) {
     document.getElementById('nosupport').classList.remove('d-none');
@@ -312,6 +316,10 @@ function setVoiceInput() {
       const reply = event.results[0][0].transcript;
       document.getElementById('reply').textContent = reply;
       if (reply.toLowerCase() == answer.toLowerCase()) {
+        playAudio(correctAudio);
+        nextProblem();
+      } else if (formatReply(reply) == answer.toLowerCase()) {
+        // one の認識率が低いので、one apple なども OK とする
         playAudio(correctAudio);
         nextProblem();
       }
