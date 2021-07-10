@@ -318,10 +318,13 @@ function setVoiceInput() {
       if (reply.toLowerCase() == answer.toLowerCase()) {
         playAudio(correctAudio);
         nextProblem();
-      } else if (formatReply(reply) == answer.toLowerCase()) {
+      } else {
         // one の認識率が低いので、one apple なども OK とする
-        playAudio(correctAudio);
-        nextProblem();
+        if ((voiceInput.lang == 'en_US' || voiceInput.lang == 'en-US') &&
+          formatReply(reply) == answer.toLowerCase()) {
+          playAudio(correctAudio);
+          nextProblem();
+        }
       }
       voiceInput.stop();
     };
