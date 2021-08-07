@@ -6,6 +6,7 @@ let voiceInput = null;
 let answer = 'Talk Numbers';
 let firstRun = true;
 let catCounter = 0;
+let solveCount = 0;
 let allVoices = [];
 
 function loadConfig() {
@@ -165,6 +166,7 @@ function hideAnswer() {
 
 function nextProblem() {
   hideAnswer();
+  solveCount += 1;
   const grade = document.getElementById('grade').selectedIndex + 1;
   const max = Math.pow(10, grade);
   answer = getRandomInt(0, max).toString();
@@ -257,14 +259,14 @@ function startGameTimer() {
     } else {
       clearInterval(gameTimer);
       playAudio(endAudio);
-      playPanel.classList.add('d-none');
-      scorePanel.classList.remove('d-none');
+      scoring();
     }
   }, 1000);
 }
 
 let countdownTimer;
 function countdown() {
+  solveCount = 0;
   clearTimeout(countdownTimer);
   gameStart.classList.remove('d-none');
   playPanel.classList.add('d-none');
@@ -281,11 +283,18 @@ function countdown() {
       clearTimeout(countdownTimer);
       gameStart.classList.add('d-none');
       playPanel.classList.remove('d-none');
+      solveCount = 0;
       document.getElementById('score').innerText = 0;
       nextProblem();
       startGameTimer();
     }
   }, 1000);
+}
+
+function scoring() {
+  playPanel.classList.add('d-none');
+  scorePanel.classList.remove('d-none');
+  document.getElementById('score').textContent = solveCount;
 }
 
 function formatReply(reply) {
