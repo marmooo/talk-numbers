@@ -1,13 +1,14 @@
-let endAudio, errorAudio, correctAudio;
-loadAudios();
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioContext = new AudioContext();
-let voiceInput = null;
 let answer = "Talk Numbers";
 let firstRun = true;
 let catCounter = 0;
 let solveCount = 0;
 let allVoices = [];
+const voiceInput = setVoiceInput();
+let endAudio, errorAudio, correctAudio;
+loadAudios();
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioContext = new AudioContext();
+loadConfig();
 
 function loadConfig() {
   if (localStorage.getItem("darkMode") == 1) {
@@ -18,7 +19,6 @@ function loadConfig() {
     document.getElementById("voiceOff").classList.add("d-none");
   }
 }
-loadConfig();
 
 function toggleDarkMode() {
   if (localStorage.getItem("darkMode") == 1) {
@@ -116,7 +116,6 @@ function loadVoices() {
   allVoicesObtained.then((voices) => {
     allVoices = voices;
     addLangRadioBox();
-    voiceInput = setVoiceInput();
   });
 }
 loadVoices();
