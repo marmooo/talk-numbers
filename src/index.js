@@ -82,14 +82,12 @@ function loadAudios() {
   promises = [
     loadAudio("mp3/end.mp3"),
     loadAudio("mp3/cat.mp3"),
-    loadAudio("mp3/incorrect1.mp3"),
     loadAudio("mp3/correct3.mp3"),
   ];
   Promise.all(promises).then((audioBuffers) => {
     endAudio = audioBuffers[0];
     errorAudio = audioBuffers[1];
-    incorrectAudio = audioBuffers[2];
-    correctAudio = audioBuffers[3];
+    correctAudio = audioBuffers[2];
   });
 }
 
