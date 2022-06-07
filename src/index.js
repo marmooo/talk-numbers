@@ -1,3 +1,9 @@
+const replyPlease = document.getElementById("replyPlease");
+const reply = document.getElementById("reply");
+const playPanel = document.getElementById("playPanel");
+const countPanel = document.getElementById("countPanel");
+const scorePanel = document.getElementById("scorePanel");
+const gameTime = 60;
 let answer = "Talk Numbers";
 let firstRun = true;
 let catCounter = 0;
@@ -93,13 +99,13 @@ function loadAudios() {
 
 function loadVoices() {
   // https://stackoverflow.com/questions/21513706/
-  const allVoicesObtained = new Promise(function (resolve) {
+  const allVoicesObtained = new Promise((resolve) => {
     let voices = speechSynthesis.getVoices();
     if (voices.length !== 0) {
       resolve(voices);
     } else {
       let supported = false;
-      speechSynthesis.addEventListener("voiceschanged", function () {
+      speechSynthesis.addEventListener("voiceschanged", () => {
         supported = true;
         voices = speechSynthesis.getVoices();
         resolve(voices);
@@ -166,13 +172,9 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-function hideAnswer() {
-  document.getElementById("reply").textContent = "";
-}
-
 function nextProblem() {
-  hideAnswer();
-  solveCount += 1;
+  replyPlease.classList.remove("d-none");
+  reply.classList.add("d-none");
   const grade = document.getElementById("grade").selectedIndex + 1;
   const max = Math.pow(10, grade);
   answer = getRandomInt(0, max).toString();
@@ -227,13 +229,13 @@ function catWalk(freq, catCanvas) {
   const size = 128;
   canvas.style.top = getRandomInt(0, height - size) + "px";
   canvas.style.left = width - size + "px";
-  canvas.addEventListener("click", function () {
+  canvas.addEventListener("click", () => {
     catCounter += 1;
     speak(catCounter);
-    this.remove();
+    canvas.remove();
   }, { once: true });
   area.appendChild(canvas);
-  const timer = setInterval(function () {
+  const timer = setInterval(() => {
     const x = parseInt(canvas.style.left) - 1;
     if (x > -size) {
       canvas.style.left = x + "px";
@@ -245,7 +247,7 @@ function catWalk(freq, catCanvas) {
 }
 
 function catsWalk(catCanvas) {
-  setInterval(function () {
+  setInterval(() => {
     if (Math.random() > 0.995) {
       catWalk(getRandomInt(5, 20), catCanvas);
     }
@@ -256,12 +258,11 @@ let gameTimer;
 function startGameTimer() {
   clearInterval(gameTimer);
   const timeNode = document.getElementById("time");
-  timeNode.textContent = "60秒 / 60秒";
-  gameTimer = setInterval(function () {
-    const arr = timeNode.textContent.split("秒 /");
-    const t = parseInt(arr[0]);
+  initTime();
+  gameTimer = setInterval(() => {
+    const t = parseInt(timeNode.textContent);
     if (t > 0) {
-      timeNode.textContent = (t - 1) + "秒 /" + arr[1];
+      timeNode.textContent = t - 1;
     } else {
       clearInterval(gameTimer);
       playAudio(endAudio);
@@ -274,12 +275,12 @@ let countdownTimer;
 function countdown() {
   solveCount = 0;
   clearTimeout(countdownTimer);
-  gameStart.classList.remove("d-none");
+  countPanel.classList.remove("d-none");
   playPanel.classList.add("d-none");
   scorePanel.classList.add("d-none");
   const counter = document.getElementById("counter");
   counter.textContent = 3;
-  countdownTimer = setInterval(function () {
+  countdownTimer = setInterval(() => {
     const colors = ["skyblue", "greenyellow", "violet", "tomato"];
     if (parseInt(counter.textContent) > 1) {
       const t = parseInt(counter.textContent) - 1;
@@ -287,7 +288,7 @@ function countdown() {
       counter.textContent = t;
     } else {
       clearTimeout(countdownTimer);
-      gameStart.classList.add("d-none");
+      countPanel.classList.add("d-none");
       playPanel.classList.remove("d-none");
       solveCount = 0;
       document.getElementById("score").textContent = 0;
@@ -295,6 +296,10 @@ function countdown() {
       startGameTimer();
     }
   }, 1000);
+}
+
+function initTime() {
+  document.getElementById("time").textContent = gameTime;
 }
 
 function scoring() {
@@ -316,10 +321,7 @@ function setVoiceInput() {
     // voiceInput.interimResults = true;
     voiceInput.continuous = true;
 
-    voiceInput.onstart = () => {
-      document.getElementById("startVoiceInput").classList.add("d-none");
-      document.getElementById("stopVoiceInput").classList.remove("d-none");
-    };
+    voiceInput.onstart = () => voiceInputOnStart;
     voiceInput.onend = () => {
       if (!speechSynthesis.speaking) {
         voiceInput.start();
@@ -329,6 +331,7 @@ function setVoiceInput() {
       const reply = event.results[0][0].transcript;
       document.getElementById("reply").textContent = reply;
       if (reply.toLowerCase() == answer.toLowerCase()) {
+        solveCount += 1;
         playAudio(correctAudio);
         nextProblem();
       } else {
@@ -341,10 +344,22 @@ function setVoiceInput() {
           nextProblem();
         }
       }
+      replyPlease.classList.add("d-none");
+      reply.classList.remove("d-none");
       voiceInput.stop();
     };
     return voiceInput;
   }
+}
+
+function voiceInputOnStart() {
+  document.getElementById("startVoiceInput").classList.add("d-none");
+  document.getElementById("stopVoiceInput").classList.remove("d-none");
+}
+
+function voiceInputOnStop() {
+  document.getElementById("startVoiceInput").classList.remove("d-none");
+  document.getElementById("stopVoiceInput").classList.add("d-none");
 }
 
 function startVoiceInput() {
@@ -352,9 +367,7 @@ function startVoiceInput() {
 }
 
 function stopVoiceInput() {
-  document.getElementById("startVoiceInput").classList.remove("d-none");
-  document.getElementById("stopVoiceInput").classList.add("d-none");
-  document.getElementById("reply").textContent = "答えてください";
+  voiceInputOnStop();
   voiceInput.stop();
 }
 
