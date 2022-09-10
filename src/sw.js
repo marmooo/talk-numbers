@@ -1,4 +1,4 @@
-var CACHE_NAME = "2022-08-29 10:30";
+var CACHE_NAME = "2022-09-11 08:49";
 var urlsToCache = [
   "/talk-numbers/",
   "/talk-numbers/kohacu.webp",
@@ -7,7 +7,7 @@ var urlsToCache = [
   "/talk-numbers/mp3/cat.mp3",
   "/talk-numbers/mp3/correct3.mp3",
   "/talk-numbers/favicon/favicon.svg",
-  "https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css",
+  "https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css",
 ];
 
 self.addEventListener("install", function (event) {
