@@ -205,6 +205,7 @@ function loadCatImage(url) {
   return new Promise((resolve) => {
     loadImage(url).then((originalImg) => {
       const canvas = document.createElement("canvas");
+      canvas.setAttribute("role", "button");
       canvas.width = imgSize;
       canvas.height = imgSize;
       canvas.style.position = "absolute";
