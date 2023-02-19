@@ -158,7 +158,7 @@ loadVoices();
 function speak(text) {
   speechSynthesis.cancel();
   const msg = new SpeechSynthesisUtterance(text);
-  const lang = document.getElementById("langRadio").lang.value;
+  const lang = document.getElementById("langRadio").elements.lang.value;
   const jokeVoices = [
     // "com.apple.eloquence.en-US.Flo",
     "com.apple.speech.synthesis.voice.Bahh",
@@ -196,7 +196,7 @@ function speak(text) {
     voiceInput.start();
   };
   msg.voice = voices[Math.floor(Math.random() * voices.length)];
-  msg.lang = document.getElementById("langRadio").lang.value;
+  msg.lang = document.getElementById("langRadio").elements.lang.value;
   voiceInput.stop();
   speechSynthesis.speak(msg);
 }
@@ -383,7 +383,7 @@ function setVoiceInput() {
     document.getElementById("noSTT").classList.remove("d-none");
   } else {
     const voiceInput = new webkitSpeechRecognition();
-    voiceInput.lang = document.getElementById("langRadio").lang.value;
+    voiceInput.lang = document.getElementById("langRadio").elements.lang.value;
     // voiceInput.interimResults = true;
     voiceInput.continuous = true;
 
