@@ -117,8 +117,39 @@ function loadVoices() {
       }, 1000);
     }
   });
+  const jokeVoices = [
+    // "com.apple.eloquence.en-US.Flo",
+    "com.apple.speech.synthesis.voice.Bahh",
+    "com.apple.speech.synthesis.voice.Albert",
+    // "com.apple.speech.synthesis.voice.Fred",
+    "com.apple.speech.synthesis.voice.Hysterical",
+    "com.apple.speech.synthesis.voice.Organ",
+    "com.apple.speech.synthesis.voice.Cellos",
+    "com.apple.speech.synthesis.voice.Zarvox",
+    // "com.apple.eloquence.en-US.Rocko",
+    // "com.apple.eloquence.en-US.Shelley",
+    // "com.apple.speech.synthesis.voice.Princess",
+    // "com.apple.eloquence.en-US.Grandma",
+    // "com.apple.eloquence.en-US.Eddy",
+    "com.apple.speech.synthesis.voice.Bells",
+    // "com.apple.eloquence.en-US.Grandpa",
+    "com.apple.speech.synthesis.voice.Trinoids",
+    // "com.apple.speech.synthesis.voice.Kathy",
+    // "com.apple.eloquence.en-US.Reed",
+    "com.apple.speech.synthesis.voice.Boing",
+    "com.apple.speech.synthesis.voice.Whisper",
+    "com.apple.speech.synthesis.voice.Deranged",
+    "com.apple.speech.synthesis.voice.GoodNews",
+    "com.apple.speech.synthesis.voice.BadNews",
+    "com.apple.speech.synthesis.voice.Bubbles",
+    // "com.apple.voice.compact.en-US.Samantha",
+    // "com.apple.eloquence.en-US.Sandy",
+    // "com.apple.speech.synthesis.voice.Junior",
+    // "com.apple.speech.synthesis.voice.Ralph",
+  ];
   allVoicesObtained.then((voices) => {
-    allVoices = voices;
+    allVoices = voices
+      .filter((voice) => !jokeVoices.includes(voice.voiceURI));
     addLangRadioBox();
   });
 }
@@ -128,7 +159,39 @@ function speak(text) {
   speechSynthesis.cancel();
   const msg = new SpeechSynthesisUtterance(text);
   const lang = document.getElementById("langRadio").lang.value;
-  const voices = allVoices.filter((voice) => voice.lang == lang);
+  const jokeVoices = [
+    // "com.apple.eloquence.en-US.Flo",
+    "com.apple.speech.synthesis.voice.Bahh",
+    "com.apple.speech.synthesis.voice.Albert",
+    // "com.apple.speech.synthesis.voice.Fred",
+    "com.apple.speech.synthesis.voice.Hysterical",
+    "com.apple.speech.synthesis.voice.Organ",
+    "com.apple.speech.synthesis.voice.Cellos",
+    "com.apple.speech.synthesis.voice.Zarvox",
+    // "com.apple.eloquence.en-US.Rocko",
+    // "com.apple.eloquence.en-US.Shelley",
+    // "com.apple.speech.synthesis.voice.Princess",
+    // "com.apple.eloquence.en-US.Grandma",
+    // "com.apple.eloquence.en-US.Eddy",
+    "com.apple.speech.synthesis.voice.Bells",
+    // "com.apple.eloquence.en-US.Grandpa",
+    "com.apple.speech.synthesis.voice.Trinoids",
+    // "com.apple.speech.synthesis.voice.Kathy",
+    // "com.apple.eloquence.en-US.Reed",
+    "com.apple.speech.synthesis.voice.Boing",
+    "com.apple.speech.synthesis.voice.Whisper",
+    "com.apple.speech.synthesis.voice.Deranged",
+    "com.apple.speech.synthesis.voice.GoodNews",
+    "com.apple.speech.synthesis.voice.BadNews",
+    "com.apple.speech.synthesis.voice.Bubbles",
+    // "com.apple.voice.compact.en-US.Samantha",
+    // "com.apple.eloquence.en-US.Sandy",
+    // "com.apple.speech.synthesis.voice.Junior",
+    // "com.apple.speech.synthesis.voice.Ralph",
+  ];
+  const voices = allVoices
+    .filter((voice) => voice.lang == lang)
+    .filter((voice) => !jokeVoices.includes(voice.voiceURI));
   msg.onend = () => {
     voiceInput.start();
   };
