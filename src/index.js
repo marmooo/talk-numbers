@@ -5,10 +5,11 @@ const infoPanel = document.getElementById("infoPanel");
 const countPanel = document.getElementById("countPanel");
 const scorePanel = document.getElementById("scorePanel");
 const gameTime = 60;
+let gameTimer;
 let answer = "Talk Numbers";
 let firstRun = true;
 let catCounter = 0;
-let solveCount = 0;
+let correctCount = 0;
 let allVoices = [];
 const voiceInput = setVoiceInput();
 const audioContext = new AudioContext();
@@ -306,7 +307,31 @@ function catsWalk(catCanvas) {
   }, 10);
 }
 
-let gameTimer;
+function countdown() {
+  correctCount = 0;
+  countPanel.classList.remove("d-none");
+  infoPanel.classList.add("d-none");
+  playPanel.classList.add("d-none");
+  scorePanel.classList.add("d-none");
+  const counter = document.getElementById("counter");
+  counter.textContent = 3;
+  const timer = setInterval(() => {
+    const colors = ["skyblue", "greenyellow", "violet", "tomato"];
+    if (parseInt(counter.textContent) > 1) {
+      const t = parseInt(counter.textContent) - 1;
+      counter.style.backgroundColor = colors[t];
+      counter.textContent = t;
+    } else {
+      clearTimeout(timer);
+      countPanel.classList.add("d-none");
+      infoPanel.classList.remove("d-none");
+      playPanel.classList.remove("d-none");
+      nextProblem();
+      startGameTimer();
+    }
+  }, 1000);
+}
+
 function startGameTimer() {
   clearInterval(gameTimer);
   const timeNode = document.getElementById("time");
@@ -323,35 +348,6 @@ function startGameTimer() {
   }, 1000);
 }
 
-let countdownTimer;
-function countdown() {
-  solveCount = 0;
-  clearTimeout(countdownTimer);
-  countPanel.classList.remove("d-none");
-  infoPanel.classList.add("d-none");
-  playPanel.classList.add("d-none");
-  scorePanel.classList.add("d-none");
-  const counter = document.getElementById("counter");
-  counter.textContent = 3;
-  countdownTimer = setInterval(() => {
-    const colors = ["skyblue", "greenyellow", "violet", "tomato"];
-    if (parseInt(counter.textContent) > 1) {
-      const t = parseInt(counter.textContent) - 1;
-      counter.style.backgroundColor = colors[t];
-      counter.textContent = t;
-    } else {
-      clearTimeout(countdownTimer);
-      countPanel.classList.add("d-none");
-      infoPanel.classList.remove("d-none");
-      playPanel.classList.remove("d-none");
-      solveCount = 0;
-      document.getElementById("score").textContent = 0;
-      nextProblem();
-      startGameTimer();
-    }
-  }, 1000);
-}
-
 function initTime() {
   document.getElementById("time").textContent = gameTime;
 }
@@ -359,7 +355,7 @@ function initTime() {
 function scoring() {
   playPanel.classList.add("d-none");
   scorePanel.classList.remove("d-none");
-  document.getElementById("score").textContent = solveCount;
+  document.getElementById("score").textContent = correctCount;
 }
 
 function formatReply(reply) {
@@ -385,7 +381,7 @@ function setVoiceInput() {
       const reply = event.results[0][0].transcript;
       document.getElementById("reply").textContent = reply;
       if (reply.toLowerCase() == answer.toLowerCase()) {
-        solveCount += 1;
+        correctCount += 1;
         playAudio("correct");
         nextProblem();
       } else {
