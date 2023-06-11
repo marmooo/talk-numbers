@@ -93,11 +93,11 @@ sudo apt install festival speech-dispatcher-festival</code></pre>
       </p>
       <p><span class="notranslate">one</span> は認識率が低いので、
       <span class="notranslate">one apple</span> などのように、後ろに単語をつけくわえてください。
-      <div id="playPanel">
+      <div id="infoPanel">
         <div class="row">
           <div class="col-md">
             <h5>言語を選択</h5>
-            <form id="langRadio" class="pb-3 text-center notranslate">
+            <form id="langRadio" class="pb-3 notranslate">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" name="lang" type="radio" id="radio1" value="en-US" checked>
                 <label class="from-check-label">en-US</label>
@@ -122,6 +122,8 @@ sudo apt install festival speech-dispatcher-festival</code></pre>
             </div>
           </div>
         </div>
+      </div>
+      <div id="playPanel">
         <div class="text-center pt-3">
           <div class="pb-3 h1">問題: <span id="answer" class="notranslate"></span>
             <button id="respeak" title="もう一度聴く" class="btn btn-outline-secondary btn-lg ms-2" type="button">
