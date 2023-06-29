@@ -196,20 +196,18 @@ function addLangRadioBox() {
   radio.replaceChildren();
   const langs = allVoices.map((voice) => voice.lang);
   const uniqueLangs = [...new Set(langs)];
-  uniqueLangs.forEach((lang, i) => {
+  uniqueLangs.forEach((lang) => {
     const div = document.createElement("div");
     div.className = "form-check form-check-inline";
     const input = document.createElement("input");
     input.className = "form-check-input";
     input.name = "lang";
     input.type = "radio";
-    input.id = "radio" + i;
     input.value = lang;
     const label = document.createElement("label");
     label.className = "from-check-label";
-    label.for = "radio" + i;
     label.textContent = lang;
-    div.appendChild(input);
+    label.appendChild(input);
     div.appendChild(label);
     radio.appendChild(div);
     if (lang == "en-US" || lang == "en_US") {
