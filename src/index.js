@@ -380,7 +380,7 @@ function setVoiceInput() {
       document.getElementById("reply").textContent = reply;
       if (reply.toLowerCase() == answer.toLowerCase()) {
         correctCount += 1;
-        playAudio("correct");
+        playAudio("correct", 0.3);
         nextProblem();
       } else {
         // one の認識率が低いので、one apple なども OK とする
@@ -388,7 +388,7 @@ function setVoiceInput() {
           (voiceInput.lang == "en_US" || voiceInput.lang == "en-US") &&
           formatReply(reply) == answer.toLowerCase()
         ) {
-          playAudio("correct");
+          playAudio("correct", 0.3);
           nextProblem();
         }
       }
