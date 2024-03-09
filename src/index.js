@@ -12,7 +12,7 @@ let catCounter = 0;
 let correctCount = 0;
 let allVoices = [];
 const voiceInput = setVoiceInput();
-const audioContext = new AudioContext();
+const audioContext = new globalThis.AudioContext();
 const audioBufferCache = {};
 loadAudio("end", "mp3/end.mp3");
 loadAudio("error", "mp3/cat.mp3");
@@ -143,7 +143,7 @@ loadVoices();
 
 function speak(text) {
   speechSynthesis.cancel();
-  const msg = new SpeechSynthesisUtterance(text);
+  const msg = new globalThis.SpeechSynthesisUtterance(text);
   const lang = document.getElementById("langRadio").elements.lang.value;
   const jokeVoices = [
     // "com.apple.eloquence.en-US.Flo",
@@ -361,10 +361,10 @@ function formatReply(reply) {
 }
 
 function setVoiceInput() {
-  if (!("webkitSpeechRecognition" in window)) {
+  if (!globalThis.webkitSpeechRecognition) {
     document.getElementById("noSTT").classList.remove("d-none");
   } else {
-    const voiceInput = new webkitSpeechRecognition();
+    const voiceInput = new globalThis.webkitSpeechRecognition();
     voiceInput.lang = document.getElementById("langRadio").elements.lang.value;
     // voiceInput.interimResults = true;
     voiceInput.continuous = true;
