@@ -397,9 +397,9 @@ function setVoiceInput() {
       }
     };
     voiceInput.onresult = (event) => {
-      const reply = event.results[0][0].transcript;
-      document.getElementById("reply").textContent = reply;
-      if (reply.toLowerCase() == answer.toLowerCase()) {
+      const replyText = event.results[0][0].transcript;
+      document.getElementById("reply").textContent = replyText;
+      if (replyText.toLowerCase() == answer.toLowerCase()) {
         correctCount += 1;
         playAudio("correct", 0.3);
         nextProblem();
@@ -407,7 +407,7 @@ function setVoiceInput() {
         // one の認識率が低いので、one apple なども OK とする
         if (
           (voiceInput.lang == "en_US" || voiceInput.lang == "en-US") &&
-          formatReply(reply) == answer.toLowerCase()
+          formatReply(replyText) == answer.toLowerCase()
         ) {
           playAudio("correct", 0.3);
           nextProblem();
