@@ -1,3 +1,5 @@
+import numberToWords from "https://cdn.jsdelivr.net/npm/number-to-words@1.2.4/+esm";
+
 const replyPlease = document.getElementById("replyPlease");
 const reply = document.getElementById("reply");
 const playPanel = document.getElementById("playPanel");
@@ -378,7 +380,25 @@ function scoring() {
 }
 
 function formatReply(reply) {
-  return reply.toLowerCase().split(" ").slice(0, -1).join(" ");
+  // one の認識率が低いので、one apple なども OK とする
+  const number = reply.toLowerCase().split(" ")[0];
+  return toWords(number);
+}
+
+function toWords(str) {
+  if (/[0-9]/.test(str)) {
+    if (/\d+(?:\.\d+)?/.test(str)) {
+      // 1.234, etc.
+      return numberToWords.toWords(str);
+    } else {
+      // 1,234, $567, \789, etc.
+      str = str.replace(/[^\d.-]/g, "");
+      return numberToWords.toWords(str);
+    }
+  } else {
+    // one hundred twenty three, etc.
+    return str;
+  }
 }
 
 function setVoiceInput() {
@@ -399,16 +419,15 @@ function setVoiceInput() {
     voiceInput.onresult = (event) => {
       const replyText = event.results[0][0].transcript;
       document.getElementById("reply").textContent = replyText;
-      if (replyText.toLowerCase() == answer.toLowerCase()) {
-        correctCount += 1;
-        playAudio("correct", 0.3);
-        nextProblem();
+      if (voiceInput.lang.startsWith("en")) {
+        if (formatReply(replyText) == formatReply(answer)) {
+          correctCount += 1;
+          playAudio("correct", 0.3);
+          nextProblem();
+        }
       } else {
-        // one の認識率が低いので、one apple なども OK とする
-        if (
-          (voiceInput.lang == "en_US" || voiceInput.lang == "en-US") &&
-          formatReply(replyText) == answer.toLowerCase()
-        ) {
+        if (replyText.toLowerCase() == answer.toLowerCase()) {
+          correctCount += 1;
           playAudio("correct", 0.3);
           nextProblem();
         }
