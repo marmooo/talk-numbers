@@ -1,11 +1,11 @@
 import numberToWords from "https://cdn.jsdelivr.net/npm/number-to-words@1.2.4/+esm";
 
-const replyPlease = document.getElementById("replyPlease");
-const reply = document.getElementById("reply");
 const playPanel = document.getElementById("playPanel");
 const infoPanel = document.getElementById("infoPanel");
 const countPanel = document.getElementById("countPanel");
 const scorePanel = document.getElementById("scorePanel");
+const replyPlease = document.getElementById("replyPlease");
+const reply = document.getElementById("reply");
 const gameTime = 60;
 let gameTimer;
 let answer = "Talk Numbers";
@@ -65,10 +65,6 @@ function createAudioContext() {
 }
 
 function unlockAudio() {
-  const uttr = new SpeechSynthesisUtterance("");
-  uttr.lang = document.getElementById("langRadio").elements.lang.value;
-  speechSynthesis.speak(uttr);
-
   if (audioContext) {
     audioContext.resume();
   } else {
@@ -329,6 +325,7 @@ function catsWalk(catCanvas) {
 }
 
 function countdown() {
+  speak(""); // unlock
   correctCount = 0;
   countPanel.classList.remove("d-none");
   infoPanel.classList.add("d-none");
@@ -417,7 +414,7 @@ function setVoiceInput() {
     };
     voiceInput.onresult = (event) => {
       const replyText = event.results[0][0].transcript;
-      document.getElementById("reply").textContent = replyText;
+      reply.textContent = replyText;
       if (voiceInput.lang.startsWith("en")) {
         if (formatReply(replyText) == formatReply(answer)) {
           correctCount += 1;
