@@ -325,7 +325,7 @@ function catsWalk(catCanvas) {
 }
 
 function countdown() {
-  speak(""); // unlock
+  speak("Ready"); // unlock
   correctCount = 0;
   countPanel.classList.remove("d-none");
   infoPanel.classList.add("d-none");
