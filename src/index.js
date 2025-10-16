@@ -1,4 +1,5 @@
 import numberToWords from "https://cdn.jsdelivr.net/npm/number-to-words@1.2.4/+esm";
+import { createWorker } from "https://cdn.jsdelivr.net/npm/emoji-particle@0.0.4/+esm";
 
 const playPanel = document.getElementById("playPanel");
 const infoPanel = document.getElementById("infoPanel");
@@ -7,6 +8,8 @@ const scorePanel = document.getElementById("scorePanel");
 const replyPlease = document.getElementById("replyPlease");
 const reply = document.getElementById("reply");
 const gameTime = 60;
+const emojiParticle = initEmojiParticle();
+const maxParticleCount = 10;
 let gameTimer;
 let answer = "Talk Numbers";
 let firstRun = true;
@@ -211,6 +214,30 @@ function respeak() {
   speak(answer);
 }
 
+function initEmojiParticle() {
+  const canvas = document.createElement("canvas");
+  Object.assign(canvas.style, {
+    position: "fixed",
+    pointerEvents: "none",
+    top: "0px",
+    left: "0px",
+  });
+  canvas.width = document.documentElement.clientWidth;
+  canvas.height = document.documentElement.clientHeight;
+  document.body.prepend(canvas);
+
+  const offscreen = canvas.transferControlToOffscreen();
+  const worker = createWorker();
+  worker.postMessage({ type: "init", canvas: offscreen }, [offscreen]);
+
+  globalThis.addEventListener("resize", () => {
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    worker.postMessage({ type: "resize", width, height });
+  });
+  return { canvas, offscreen, worker };
+}
+
 function addLangRadioBox() {
   const radio = document.getElementById("langRadio");
   radio.replaceChildren();
@@ -243,6 +270,16 @@ function getRandomInt(min, max) {
 }
 
 function nextProblem() {
+  for (let i = 0; i < Math.min(correctCount, maxParticleCount); i++) {
+    emojiParticle.worker.postMessage({
+      type: "spawn",
+      options: {
+        particleType: "popcorn",
+        originX: Math.random() * emojiParticle.canvas.width,
+        originY: Math.random() * emojiParticle.canvas.height,
+      },
+    });
+  }
   const grade = document.getElementById("grade").selectedIndex + 1;
   const max = Math.pow(10, grade);
   answer = getRandomInt(0, max).toString();
@@ -326,7 +363,6 @@ function catsWalk(catCanvas) {
 
 function countdown() {
   speak("Ready"); // unlock
-  correctCount = 0;
   countPanel.classList.remove("d-none");
   infoPanel.classList.add("d-none");
   playPanel.classList.add("d-none");
@@ -341,6 +377,7 @@ function countdown() {
       counter.textContent = t;
     } else {
       clearInterval(timer);
+      correctCount = 0;
       countPanel.classList.add("d-none");
       infoPanel.classList.remove("d-none");
       playPanel.classList.remove("d-none");
